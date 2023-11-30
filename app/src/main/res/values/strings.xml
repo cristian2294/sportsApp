@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SportsApp</string>
+
+    <string name="api_key">7632b970f4aac61c735376620e555092</string>
 </resources>

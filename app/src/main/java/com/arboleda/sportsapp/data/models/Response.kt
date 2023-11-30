@@ -1,0 +1,12 @@
+package com.arboleda.sportsapp.data.models
+
+import com.google.gson.annotations.SerializedName
+
+data class Response(
+    @SerializedName("code")
+    val code: String,
+    @SerializedName("flag")
+    val flag: String,
+    @SerializedName("name")
+    val name: String,
+)
