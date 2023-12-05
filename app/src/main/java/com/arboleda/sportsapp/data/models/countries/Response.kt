@@ -1,4 +1,4 @@
-package com.arboleda.sportsapp.data.models
+package com.arboleda.sportsapp.data.models.countries
 
 import com.google.gson.annotations.SerializedName
 
