@@ -1,7 +1,7 @@
 package com.arboleda.sportsapp.data.models.countries
 
+import com.arboleda.sportsapp.domain.models.countries.Countries
 import com.google.gson.annotations.SerializedName
-import com.arboleda.sportsapp.domain.models.countries.Countries as CountriesDomain
 
 data class Countries(
     @SerializedName("errors")
@@ -17,8 +17,8 @@ data class Countries(
     @SerializedName("results")
     val results: Int,
 ) {
-    fun toDomain(): CountriesDomain {
-        return CountriesDomain(
+    fun toDomain(): Countries {
+        return Countries(
             errors = errors,
             get = get,
             paging = paging,
