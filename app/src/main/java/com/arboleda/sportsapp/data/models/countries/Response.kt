@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName
 
 data class Response(
     @SerializedName("code")
-    val code: String,
+    val code: String?,
     @SerializedName("flag")
-    val flag: String,
+    val flag: String?,
     @SerializedName("name")
     val name: String,
 ) {

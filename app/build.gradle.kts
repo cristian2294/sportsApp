@@ -53,9 +53,10 @@ android {
 
 dependencies {
 
-    val retrofit = "2.9.0"
-    val mockk = "1.13.5"
-    val daggerHilt = "2.44"
+    val retrofitVersion = "2.9.0"
+    val mockkVersion = "1.13.5"
+    val daggerHiltVersion = "2.44"
+    val coilVersion = "2.2.2"
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.activity:activity-compose:1.7.0")
@@ -66,22 +67,23 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:$retrofit")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofit")
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     // Mockk
-    testImplementation("io.mockk:mockk:$mockk")
-    androidTestImplementation("io.mockk:mockk-android:$mockk")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
 
     // Coil
-    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("io.coil-kt:coil-compose:$coilVersion")
+    implementation("io.coil-kt:coil-svg:$coilVersion")
 
     // Constraint Layout
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     // Dagger hilt
-    implementation("com.google.dagger:hilt-android:$daggerHilt")
-    kapt("com.google.dagger:hilt-android-compiler:$daggerHilt")
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$daggerHiltVersion")
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")

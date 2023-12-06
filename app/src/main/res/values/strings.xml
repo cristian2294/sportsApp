@@ -2,4 +2,9 @@
     <string name="app_name">SportsApp</string>
 
     <string name="api_key">7632b970f4aac61c735376620e555092</string>
+
+    <!-- Countries Screen-->
+    <string name="countries.title">Chose your country</string>
+    <string name="countries.flag_content_description">Flag Country</string>
+    <string name="countries.indeterminate_flag_content_description">Flag Country</string>
 </resources>
