@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,16 +45,16 @@ fun CountriesScreen(countriesViewModel: CountriesViewModel) {
             .background(colorResource(id = R.color.purple2_50))
             .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp)),
     ) {
-        InitViewModel(countriesViewModel)
+        InitViewModel(countriesViewModel, Modifier)
     }
 }
 
 @Composable
-fun InitViewModel(countriesViewModel: CountriesViewModel) {
+fun InitViewModel(countriesViewModel: CountriesViewModel, modifier: Modifier) {
     val countriesState = countriesViewModel.countriesState.observeAsState()
     when (countriesState.value) {
         is CountriesState.Error -> ShowError((countriesState.value as CountriesState.Error).message)
-        CountriesState.Loading -> ShowLoader()
+        CountriesState.Loading -> ShowLoader(modifier)
         is CountriesState.Success -> {
             ShowListCountries((countriesState.value as CountriesState.Success).countries)
         }
@@ -133,8 +135,16 @@ fun LoadFlagCountry(flag: String) {
 }
 
 @Composable
-fun ShowLoader() {
-    // TODO: implement in the future
+fun ShowLoader(modifier: Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.width(dimensionResource(id = R.dimen.dimen_64dp))
+                .align(alignment = Alignment.Center),
+            color = colorResource(id = R.color.purple2_500),
+        )
+    }
 }
 
 @Composable
