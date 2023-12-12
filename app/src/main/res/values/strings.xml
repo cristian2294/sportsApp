@@ -7,4 +7,6 @@
     <string name="countries.title">Chose your country</string>
     <string name="countries.flag_content_description">Flag Country</string>
     <string name="countries.indeterminate_flag_content_description">Flag Country</string>
+    <string name="countries.error.title">Error uploading countries</string>
+    <string name="countries.error.button.understood">OK</string>
 </resources>

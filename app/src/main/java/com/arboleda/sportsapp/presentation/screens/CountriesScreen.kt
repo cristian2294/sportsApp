@@ -3,20 +3,27 @@ package com.arboleda.sportsapp.presentation.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
@@ -52,8 +60,17 @@ fun CountriesScreen(countriesViewModel: CountriesViewModel) {
 @Composable
 fun InitViewModel(countriesViewModel: CountriesViewModel, modifier: Modifier) {
     val countriesState = countriesViewModel.countriesState.observeAsState()
+    val showDialog: Boolean by countriesViewModel.showDialog.observeAsState(initial = true)
     when (countriesState.value) {
-        is CountriesState.Error -> ShowError((countriesState.value as CountriesState.Error).message)
+        is CountriesState.Error -> {
+            ShowError(
+                show = showDialog,
+                message = (countriesState.value as CountriesState.Error).message,
+            ) {
+                countriesViewModel.onDialogDismiss()
+            }
+        }
+
         CountriesState.Loading -> ShowLoader(modifier)
         is CountriesState.Success -> {
             ShowListCountries((countriesState.value as CountriesState.Success).countries)
@@ -148,8 +165,61 @@ fun ShowLoader(modifier: Modifier) {
 }
 
 @Composable
-fun ShowError(message: String?) {
-    // TODO: implement in the future
+fun ShowError(
+    show: Boolean,
+    message: String?,
+    onDismiss: () -> Unit,
+) {
+    if (show) {
+        Dialog(onDismissRequest = { onDismiss() }) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(dimensionResource(id = R.dimen.dimen_250dp)),
+                shape = RoundedCornerShape(dimensionResource(id = R.dimen.dimen_16dp)),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(id = R.color.purple2_100)),
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.countries_error_title),
+                        Modifier
+                            .align(alignment = Alignment.CenterHorizontally)
+                            .padding(top = dimensionResource(id = R.dimen.dimen_24dp)),
+                        fontSize = dimensionResource(id = R.dimen.dimen_20dp).value.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.dimen_28dp)))
+                    Text(
+                        text = message ?: stringResource(id = R.string.countries_error_title),
+                        modifier = Modifier
+                            .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp))
+                            .wrapContentSize(Alignment.Center),
+                        fontSize = dimensionResource(id = R.dimen.dimen_16dp).value.sp,
+                    )
+                    Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.dimen_16dp)))
+                    TextButton(
+                        onClick = {
+                            onDismiss()
+                        },
+                        modifier = Modifier.align(alignment = Alignment.End).padding(
+                            bottom = dimensionResource(
+                                id = R.dimen.dimen_24dp,
+                            ),
+                            end = dimensionResource(R.dimen.dimen_8dp),
+                        ),
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.countries_error_button_understood),
+                            color = colorResource(id = R.color.purple2_700),
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable

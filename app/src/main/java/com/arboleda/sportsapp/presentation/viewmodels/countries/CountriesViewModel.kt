@@ -19,6 +19,10 @@ class CountriesViewModel @Inject constructor(
 
     private var _countriesState = MutableLiveData<CountriesState>()
     val countriesState: LiveData<CountriesState> get() = _countriesState
+
+    private var _showDialog = MutableLiveData<Boolean>()
+    val showDialog: LiveData<Boolean> get() = _showDialog
+
     fun getAllCountries() {
         _countriesState.value = CountriesState.Loading
         viewModelScope.launch {
@@ -32,5 +36,9 @@ class CountriesViewModel @Inject constructor(
                 _countriesState.value = CountriesState.Error(e.message)
             }
         }
+    }
+
+    fun onDialogDismiss() {
+        _showDialog.value = false
     }
 }
