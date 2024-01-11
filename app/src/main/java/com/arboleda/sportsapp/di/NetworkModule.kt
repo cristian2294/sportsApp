@@ -1,13 +1,17 @@
 package com.arboleda.sportsapp.di
 
+import android.content.Context
 import com.arboleda.sportsapp.data.endpoints.countries.CountriesApi
 import com.arboleda.sportsapp.data.repositories.countries.CountriesRepositoryImpl
+import com.arboleda.sportsapp.data.repositories.preferences.DatastorePreferencesRepositoryImpl
 import com.arboleda.sportsapp.domain.repositories.countries.CountriesRepository
+import com.arboleda.sportsapp.domain.repositories.preferences.DatastorePreferencesRepository
 import com.arboleda.sportsapp.domain.usecases.countries.CountriesUC
 import com.arboleda.sportsapp.presentation.viewmodels.countries.CountriesViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -33,14 +37,27 @@ class NetworkModule {
 
     @Singleton
     @Provides
+    fun provideDatastorePreferences(@ApplicationContext context: Context):
+        DatastorePreferencesRepository {
+        return DatastorePreferencesRepositoryImpl(context = context)
+    }
+
+    @Singleton
+    @Provides
     fun provideCountriesApi(retrofit: Retrofit): CountriesApi {
         return retrofit.create(CountriesApi::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideCountriesRepository(countriesApi: CountriesApi): CountriesRepository {
-        return CountriesRepositoryImpl(countriesApi = countriesApi)
+    fun provideCountriesRepository(
+        datastorePreferencesRepository: DatastorePreferencesRepository,
+        countriesApi: CountriesApi,
+    ): CountriesRepository {
+        return CountriesRepositoryImpl(
+            datastorePreferencesRepository = datastorePreferencesRepository,
+            countriesApi = countriesApi,
+        )
     }
 
     @Singleton
