@@ -1,7 +1,9 @@
 package com.arboleda.sportsapp.presentation.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,7 +75,10 @@ fun InitViewModel(countriesViewModel: CountriesViewModel, modifier: Modifier) {
 
         CountriesState.Loading -> ShowLoader(modifier)
         is CountriesState.Success -> {
-            ShowListCountries((countriesState.value as CountriesState.Success).countries)
+            ShowListCountries(
+                countriesViewModel,
+                (countriesState.value as CountriesState.Success).countries,
+            )
         }
 
         else -> Unit
@@ -92,35 +97,54 @@ fun Title(modifier: Modifier) {
 }
 
 @Composable
-fun ListCountries(modifier: Modifier, countries: List<Response>) {
+fun ListCountries(
+    countriesViewModel: CountriesViewModel,
+    modifier: Modifier,
+    countries: List<Response>,
+) {
+    val context = LocalContext.current
     LazyColumn(
         modifier = modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_80dp)),
     ) {
         items(countries) { country ->
-            Spacer(
-                modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_8dp)),
-            )
-            Row(modifier = modifier) {
-                if (country.flag.isNullOrEmpty()) {
-                    LoadImageIndeterminateFlag()
-                } else {
-                    LoadFlagCountry(country.flag)
-                }
-                Text(
-                    text = country.name,
-                    modifier = modifier.padding(start = dimensionResource(id = R.dimen.dimen_8dp))
-                        .align(alignment = Alignment.CenterVertically),
-
-                )
+            ItemCountry(country, modifier) {
+                countriesViewModel.saveCountryCode(country.code ?: String())
+                Toast.makeText(context, it.name, Toast.LENGTH_SHORT).show()
             }
-            Spacer(
-                modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_8dp)),
-            )
-            Divider(
-                modifier = modifier
-                    .height(dimensionResource(id = R.dimen.dimen_1dp)),
+        }
+    }
+}
+
+@Composable
+fun ItemCountry(
+    country: Response,
+    modifier: Modifier,
+    onItemSelected: (country: Response) -> Unit,
+) {
+    Column(modifier = modifier.clickable { onItemSelected(country) }) {
+        Spacer(
+            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_8dp)),
+        )
+        Row {
+            if (country.flag.isNullOrEmpty()) {
+                LoadImageIndeterminateFlag()
+            } else {
+                LoadFlagCountry(country.flag)
+            }
+            Text(
+                text = country.name,
+                modifier = modifier.padding(start = dimensionResource(id = R.dimen.dimen_8dp))
+                    .align(alignment = Alignment.CenterVertically),
+
             )
         }
+        Spacer(
+            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_8dp)),
+        )
+        Divider(
+            modifier = modifier
+                .height(dimensionResource(id = R.dimen.dimen_1dp)),
+        )
     }
 }
 
@@ -223,8 +247,11 @@ fun ShowError(
 }
 
 @Composable
-fun ShowListCountries(countries: List<Response>) {
+fun ShowListCountries(
+    countriesViewModel: CountriesViewModel,
+    countries: List<Response>,
+) {
     Title(Modifier)
     Spacer(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_16dp)))
-    ListCountries(Modifier, countries)
+    ListCountries(countriesViewModel, Modifier, countries)
 }
