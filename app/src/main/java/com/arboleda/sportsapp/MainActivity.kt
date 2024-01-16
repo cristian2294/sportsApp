@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.arboleda.sportsapp.presentation.screens.CountriesScreen
 import com.arboleda.sportsapp.presentation.viewmodels.countries.CountriesViewModel
+import com.arboleda.sportsapp.presentation.viewmodels.countries.LeaguesViewModel
 import com.arboleda.sportsapp.ui.theme.SportsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,6 +19,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val countriesViewModel: CountriesViewModel by viewModels()
+        val leaguesViewModel: LeaguesViewModel by viewModels()
         countriesViewModel.getAllCountries()
         setContent {
             SportsAppTheme {

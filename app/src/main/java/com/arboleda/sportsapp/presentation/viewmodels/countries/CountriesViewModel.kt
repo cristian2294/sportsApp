@@ -16,15 +16,15 @@ import javax.inject.Inject
 @HiltViewModel
 class CountriesViewModel @Inject constructor(
     private val countriesUC: CountriesUC,
+    private val _countriesState: MutableLiveData<CountriesState>,
+    private val _showDialog: MutableLiveData<Boolean>,
+    private val _countryCode: MutableLiveData<String>,
 ) : ViewModel() {
 
-    private var _countriesState = MutableLiveData<CountriesState>()
     val countriesState: LiveData<CountriesState> get() = _countriesState
 
-    private var _showDialog = MutableLiveData<Boolean>()
     val showDialog: LiveData<Boolean> get() = _showDialog
 
-    private var _countryCode = MutableLiveData<String>()
     val countryCode: LiveData<String> get() = _countryCode
 
     init {

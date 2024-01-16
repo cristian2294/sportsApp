@@ -109,7 +109,7 @@ fun ListCountries(
         items(countries) { country ->
             ItemCountry(country, modifier) {
                 countriesViewModel.saveCountryCode(country.code ?: String())
-                Toast.makeText(context, it.name, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, country.name, Toast.LENGTH_SHORT).show()
             }
         }
     }
