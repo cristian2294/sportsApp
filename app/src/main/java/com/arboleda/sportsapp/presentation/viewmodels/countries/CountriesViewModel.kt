@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arboleda.sportsapp.domain.usecases.countries.CountriesUC
 import com.arboleda.sportsapp.presentation.states.CountriesState
-import com.arboleda.sportsapp.util.COUNTRY_CODE_KEY
+import com.arboleda.sportsapp.util.Constants.Companion.COUNTRY_CODE_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
