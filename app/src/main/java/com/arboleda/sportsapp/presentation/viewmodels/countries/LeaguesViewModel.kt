@@ -19,6 +19,7 @@ class LeaguesViewModel @Inject constructor(
     private val _showDialog: MutableLiveData<Boolean>,
 ) : ViewModel() {
     val showDialog: LiveData<Boolean> get() = _showDialog
+    val leagueState: LiveData<LeagueState> get() = _leagueState
 
     fun getAllLeagues(countryCode: String) {
         _leagueState.value = LeagueState.Loading

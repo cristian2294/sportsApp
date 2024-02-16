@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
@@ -46,21 +47,29 @@ import com.arboleda.sportsapp.R
 import com.arboleda.sportsapp.domain.models.countries.Response
 import com.arboleda.sportsapp.presentation.states.CountriesState
 import com.arboleda.sportsapp.presentation.viewmodels.countries.CountriesViewModel
+import com.arboleda.sportsapp.util.Routes
 
 @Composable
-fun CountriesScreen(countriesViewModel: CountriesViewModel) {
+fun CountriesScreen(
+    countriesViewModel: CountriesViewModel,
+    navController: NavHostController,
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.purple2_50))
             .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp)),
     ) {
-        InitViewModel(countriesViewModel, Modifier)
+        InitCountriesScreen(countriesViewModel, navController, Modifier)
     }
 }
 
 @Composable
-fun InitViewModel(countriesViewModel: CountriesViewModel, modifier: Modifier) {
+fun InitCountriesScreen(
+    countriesViewModel: CountriesViewModel,
+    navController: NavHostController,
+    modifier: Modifier,
+) {
     val countriesState = countriesViewModel.countriesState.observeAsState()
     val showDialog: Boolean by countriesViewModel.showDialog.observeAsState(initial = true)
     when (countriesState.value) {
@@ -78,6 +87,7 @@ fun InitViewModel(countriesViewModel: CountriesViewModel, modifier: Modifier) {
             ShowListCountries(
                 countriesViewModel,
                 (countriesState.value as CountriesState.Success).countries,
+                navController,
             )
         }
 
@@ -101,15 +111,18 @@ fun ListCountries(
     countriesViewModel: CountriesViewModel,
     modifier: Modifier,
     countries: List<Response>,
+    navController: NavHostController,
 ) {
     val context = LocalContext.current
     LazyColumn(
         modifier = modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_80dp)),
     ) {
         items(countries) { country ->
+            val countryCode = country.code ?: String()
             ItemCountry(country, modifier) {
-                countriesViewModel.saveCountryCode(country.code ?: String())
+                countriesViewModel.saveCountryCode(countryCode)
                 Toast.makeText(context, country.name, Toast.LENGTH_SHORT).show()
+                navController.navigate(Routes.SelectLeagueScreen.createRoute(countryCode))
             }
         }
     }
@@ -250,8 +263,9 @@ fun ShowError(
 fun ShowListCountries(
     countriesViewModel: CountriesViewModel,
     countries: List<Response>,
+    navController: NavHostController,
 ) {
     Title(Modifier)
     Spacer(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_16dp)))
-    ListCountries(countriesViewModel, Modifier, countries)
+    ListCountries(countriesViewModel, Modifier, countries, navController)
 }

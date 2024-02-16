@@ -1,7 +1,7 @@
 package com.arboleda.sportsapp.data.models.leagues
 
+import com.arboleda.sportsapp.domain.models.leagues.Response
 import com.google.gson.annotations.SerializedName
-import com.arboleda.sportsapp.domain.models.leagues.Response as ResponseDomain
 
 data class Response(
     @SerializedName("league")
@@ -11,9 +11,11 @@ data class Response(
     @SerializedName("seasons")
     val seasons: List<Season>,
 ) {
-    fun toDomain(): ResponseDomain = ResponseDomain(
-        league.toDomain(),
-        country.toDomain(),
-        seasons.map { it.toDomain() },
-    )
+    fun toDomain(): Response {
+        return Response(
+            league.toDomain(),
+            country.toDomain(),
+            seasons.map { it.toDomain() },
+        )
+    }
 }
