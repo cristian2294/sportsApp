@@ -36,7 +36,7 @@ import com.arboleda.sportsapp.R
 import com.arboleda.sportsapp.domain.models.leagues.League
 import com.arboleda.sportsapp.domain.models.leagues.Response
 import com.arboleda.sportsapp.presentation.states.LeagueState
-import com.arboleda.sportsapp.presentation.viewmodels.countries.LeaguesViewModel
+import com.arboleda.sportsapp.presentation.viewmodels.leagues.LeaguesViewModel
 
 @Composable
 fun LeaguesScreen(
@@ -113,6 +113,7 @@ fun ListLeagues(
     ) {
         items(leagues) { response ->
             ItemLeague(response.league, modifier) {
+                leaguesViewModel.saveLeagueId(response.league.id)
                 Toast.makeText(context, response.league.name, Toast.LENGTH_SHORT).show()
             }
         }

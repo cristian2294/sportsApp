@@ -17,7 +17,7 @@ import com.arboleda.sportsapp.presentation.screens.CountriesScreen
 import com.arboleda.sportsapp.presentation.screens.HomeScreen
 import com.arboleda.sportsapp.presentation.screens.LeaguesScreen
 import com.arboleda.sportsapp.presentation.viewmodels.countries.CountriesViewModel
-import com.arboleda.sportsapp.presentation.viewmodels.countries.LeaguesViewModel
+import com.arboleda.sportsapp.presentation.viewmodels.leagues.LeaguesViewModel
 import com.arboleda.sportsapp.ui.theme.SportsAppTheme
 import com.arboleda.sportsapp.util.Constants
 import com.arboleda.sportsapp.util.Constants.Companion.COUNTRY_CODE
@@ -44,10 +44,15 @@ class MainActivity : ComponentActivity() {
                     countriesViewModel.getCountryCode()
                     val localCountryCode = countriesViewModel.countryCode.value
 
+                    // get the league id saved in the  datastore
+                    leaguesViewModel.getLeagueId()
+                    val localLeagueId = leaguesViewModel.leagueId.value
+
                     /*** Define the start destination depending if the
                      country code has saved in the datastore or not ***/
                     val startDestination = selectStartScreen(
-                        localCountryCode ?: "",
+                        countryCode = localCountryCode ?: "",
+                        leagueId = localLeagueId ?: 0,
                     )
 
                     NavHost(
@@ -93,12 +98,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun selectStartScreen(countryCode: String): String {
-        // TODO: I need modify this function when save the league in a datastore
-        return if (countryCode.isEmpty()) {
-            Constants.SELECT_COUNTRY_SCREEN
-        } else {
-            Constants.SELECT_LEAGUE_SCREEN
+    private fun selectStartScreen(
+        countryCode: String,
+        leagueId: Int,
+    ): String {
+        return when {
+            countryCode.isEmpty() -> Constants.SELECT_COUNTRY_SCREEN
+            leagueId == 0 -> Constants.SELECT_LEAGUE_SCREEN
+            else -> Constants.HOME_SCREEN
         }
     }
 }
