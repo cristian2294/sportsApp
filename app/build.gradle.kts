@@ -58,6 +58,7 @@ dependencies {
     val daggerHiltVersion = "2.44"
     val coilVersion = "2.2.2"
     val roomVersion = "2.4.2"
+    val navigationVersion = "2.5.3"
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.activity:activity-compose:1.7.0")
@@ -104,6 +105,9 @@ dependencies {
 
     // Datastore preferences
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:$navigationVersion")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

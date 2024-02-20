@@ -1,12 +1,14 @@
 package com.arboleda.sportsapp.di
 
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import com.arboleda.sportsapp.data.endpoints.countries.CountriesApi
 import com.arboleda.sportsapp.data.repositories.countries.CountriesRepositoryImpl
 import com.arboleda.sportsapp.data.repositories.preferences.DatastorePreferencesRepositoryImpl
 import com.arboleda.sportsapp.domain.repositories.countries.CountriesRepository
 import com.arboleda.sportsapp.domain.repositories.preferences.DatastorePreferencesRepository
 import com.arboleda.sportsapp.domain.usecases.countries.CountriesUC
+import com.arboleda.sportsapp.presentation.states.CountriesState
 import com.arboleda.sportsapp.presentation.viewmodels.countries.CountriesViewModel
 import dagger.Module
 import dagger.Provides
@@ -69,7 +71,12 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideCountriesViewModel(countriesUC: CountriesUC): CountriesViewModel {
-        return CountriesViewModel(countriesUC = countriesUC)
+        return CountriesViewModel(
+            countriesUC = countriesUC,
+            _countriesState = MutableLiveData<CountriesState>(),
+            _showDialog = MutableLiveData<Boolean>(),
+            _countryCode = MutableLiveData<String>(),
+        )
     }
 }
 
