@@ -45,10 +45,11 @@ fun LeaguesScreen(
 ) {
     leaguesViewModel.getAllLeagues(countryCode)
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.purple2_50))
-            .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp)),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(colorResource(id = R.color.purple2_50))
+                .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp)),
     ) {
         InitLeaguesScreen(leaguesViewModel, Modifier)
     }
@@ -63,18 +64,20 @@ fun InitLeaguesScreen(
     val showDialog: Boolean by leaguesViewModel.showDialog.observeAsState(initial = true)
 
     when (leaguesState.value) {
-        is LeagueState.Error -> ShowError(
-            show = showDialog,
-            message = (leaguesState.value as LeagueState.Error).message,
-        ) {
-            leaguesViewModel.onDialogDismiss()
-        }
+        is LeagueState.Error ->
+            ShowError(
+                show = showDialog,
+                message = (leaguesState.value as LeagueState.Error).message,
+            ) {
+                leaguesViewModel.onDialogDismiss()
+            }
 
         LeagueState.Loading -> ShowLoader(modifier = modifier)
-        is LeagueState.Success -> ShowListLeagues(
-            leaguesViewModel,
-            (leaguesState.value as LeagueState.Success).leagues,
-        )
+        is LeagueState.Success ->
+            ShowListLeagues(
+                leaguesViewModel,
+                (leaguesState.value as LeagueState.Success).leagues,
+            )
 
         else -> Unit
     }
@@ -138,17 +141,18 @@ fun ItemLeague(
             }
             Text(
                 text = league.name,
-                modifier = modifier.padding(start = dimensionResource(id = R.dimen.dimen_8dp))
-                    .align(alignment = Alignment.CenterVertically),
-
+                modifier =
+                    modifier.padding(start = dimensionResource(id = R.dimen.dimen_8dp))
+                        .align(alignment = Alignment.CenterVertically),
             )
         }
         Spacer(
             modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_8dp)),
         )
         Divider(
-            modifier = modifier
-                .height(dimensionResource(id = R.dimen.dimen_1dp)),
+            modifier =
+                modifier
+                    .height(dimensionResource(id = R.dimen.dimen_1dp)),
         )
     }
 }
@@ -156,14 +160,16 @@ fun ItemLeague(
 @Composable
 fun LoadLeagueLogo(logo: String) {
     AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(logo)
-            .decoderFactory(SvgDecoder.Factory())
-            .build(),
+        model =
+            ImageRequest.Builder(LocalContext.current)
+                .data(logo)
+                .decoderFactory(SvgDecoder.Factory())
+                .build(),
         contentDescription = stringResource(id = R.string.countries_flag_content_description),
         contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .size(dimensionResource(id = R.dimen.dimen_40dp))
-            .clip(CircleShape),
+        modifier =
+            Modifier
+                .size(dimensionResource(id = R.dimen.dimen_40dp))
+                .clip(CircleShape),
     )
 }
