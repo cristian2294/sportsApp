@@ -7,5 +7,7 @@ import retrofit2.http.Query
 
 interface LeaguesApi {
     @GET("leagues")
-    suspend fun getAllLeagues(@Query("code") countryCode: String): Response<Leagues>
+    suspend fun getAllLeagues(
+        @Query("code") countryCode: String,
+    ): Response<Leagues>
 }

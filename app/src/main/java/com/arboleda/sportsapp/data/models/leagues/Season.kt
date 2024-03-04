@@ -13,10 +13,11 @@ data class Season(
     @SerializedName("coverage")
     val coverage: Coverage,
 ) {
-    fun toDomain(): SeasonDomain = SeasonDomain(
-        year = year,
-        start = start,
-        current = current,
-        coverage = coverage.toDomain(),
-    )
+    fun toDomain(): SeasonDomain =
+        SeasonDomain(
+            year = year,
+            start = start,
+            current = current,
+            coverage = coverage.toDomain(),
+        )
 }

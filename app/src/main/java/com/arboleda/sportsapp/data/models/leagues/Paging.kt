@@ -9,8 +9,9 @@ data class Paging(
     @SerializedName("total")
     val total: Int,
 ) {
-    fun toDomain(): PagingDomain = PagingDomain(
-        current = current,
-        total = total,
-    )
+    fun toDomain(): PagingDomain =
+        PagingDomain(
+            current = current,
+            total = total,
+        )
 }

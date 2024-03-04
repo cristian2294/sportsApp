@@ -13,41 +13,49 @@ import javax.inject.Inject
 private const val PREFERENCES_NAME = "preferences_name"
 private val Context.dataStore by preferencesDataStore(name = PREFERENCES_NAME)
 
-class DatastorePreferencesRepositoryImpl @Inject constructor(private val context: Context) :
+class DatastorePreferencesRepositoryImpl
+    @Inject
+    constructor(private val context: Context) :
     DatastorePreferencesRepository {
-    override suspend fun setCountryCode(key: String, value: String) {
-        val preferenceKey = stringPreferencesKey(key)
-        context.dataStore.edit { preferences ->
-            preferences[preferenceKey] = value
+        override suspend fun setCountryCode(
+            key: String,
+            value: String,
+        ) {
+            val preferenceKey = stringPreferencesKey(key)
+            context.dataStore.edit { preferences ->
+                preferences[preferenceKey] = value
+            }
         }
-    }
 
-    override suspend fun getCountryCode(key: String): String? {
-        return try {
-            val preferencesKey = stringPreferencesKey(key)
-            val preferences = context.dataStore.data.first()
-            preferences[preferencesKey]
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+        override suspend fun getCountryCode(key: String): String? {
+            return try {
+                val preferencesKey = stringPreferencesKey(key)
+                val preferences = context.dataStore.data.first()
+                preferences[preferencesKey]
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
-    }
 
-    override suspend fun setLeagueId(key: String, value: Int) {
-        val preferenceKey = intPreferencesKey(key)
-        context.dataStore.edit { preferences ->
-            preferences[preferenceKey] = value
+        override suspend fun setLeagueId(
+            key: String,
+            value: Int,
+        ) {
+            val preferenceKey = intPreferencesKey(key)
+            context.dataStore.edit { preferences ->
+                preferences[preferenceKey] = value
+            }
         }
-    }
 
-    override suspend fun getLeagueId(key: String): Int? {
-        return try {
-            val preferencesKey = intPreferencesKey(key)
-            val preferences = context.dataStore.data.first()
-            preferences[preferencesKey]
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+        override suspend fun getLeagueId(key: String): Int? {
+            return try {
+                val preferencesKey = intPreferencesKey(key)
+                val preferences = context.dataStore.data.first()
+                preferences[preferencesKey]
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
     }
-}

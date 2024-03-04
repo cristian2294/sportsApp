@@ -18,7 +18,6 @@ import retrofit2.Retrofit
 @Module
 @InstallIn(ViewModelComponent::class)
 object LeaguesModule {
-
     @Provides
     @ViewModelScoped
     fun provideLeaguesApi(retrofit: Retrofit): LeaguesApi {
@@ -30,25 +29,23 @@ object LeaguesModule {
     fun provideLeaguesRepository(
         datastorePreferencesRepository: DatastorePreferencesRepository,
         leaguesApi: LeaguesApi,
-    ): LeaguesRepository = LeaguesRepositoryImpl(
-        datastorePreferencesRepository = datastorePreferencesRepository,
-        leaguesApi = leaguesApi,
-    )
+    ): LeaguesRepository =
+        LeaguesRepositoryImpl(
+            datastorePreferencesRepository = datastorePreferencesRepository,
+            leaguesApi = leaguesApi,
+        )
 
     @Provides
     @ViewModelScoped
-    fun provideLeaguesUC(
-        leaguesRepository: LeaguesRepository,
-    ): LeaguesUC = LeaguesUC(leaguesRepository = leaguesRepository)
+    fun provideLeaguesUC(leaguesRepository: LeaguesRepository): LeaguesUC = LeaguesUC(leaguesRepository = leaguesRepository)
 
     @Provides
     @ViewModelScoped
-    fun provideLeaguesViewModel(
-        leaguesUC: LeaguesUC,
-    ): LeaguesViewModel = LeaguesViewModel(
-        leaguesUC = leaguesUC,
-        _leagueState = MutableLiveData<LeagueState>(),
-        _showDialog = MutableLiveData<Boolean>(),
-        _leagueId = MutableLiveData<Int>(),
-    )
+    fun provideLeaguesViewModel(leaguesUC: LeaguesUC): LeaguesViewModel =
+        LeaguesViewModel(
+            leaguesUC = leaguesUC,
+            _leagueState = MutableLiveData<LeagueState>(),
+            _showDialog = MutableLiveData<Boolean>(),
+            _leagueId = MutableLiveData<Int>(),
+        )
 }

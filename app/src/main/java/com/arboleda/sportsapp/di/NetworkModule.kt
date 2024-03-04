@@ -23,13 +23,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit {
-        val client = OkHttpClient.Builder()
-            .addInterceptor(SportInterceptor())
-            .build()
+        val client =
+            OkHttpClient.Builder()
+                .addInterceptor(SportInterceptor())
+                .build()
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
@@ -39,8 +39,9 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideDatastorePreferences(@ApplicationContext context: Context):
-        DatastorePreferencesRepository {
+    fun provideDatastorePreferences(
+        @ApplicationContext context: Context,
+    ): DatastorePreferencesRepository {
         return DatastorePreferencesRepositoryImpl(context = context)
     }
 

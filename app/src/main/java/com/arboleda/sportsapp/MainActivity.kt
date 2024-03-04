@@ -26,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) { // sdsfsdfsadfs
         super.onCreate(savedInstanceState)
         val countriesViewModel: CountriesViewModel by viewModels()
         val leaguesViewModel: LeaguesViewModel by viewModels()
@@ -50,10 +50,11 @@ class MainActivity : ComponentActivity() {
 
                     /*** Define the start destination depending if the
                      country code has saved in the datastore or not ***/
-                    val startDestination = selectStartScreen(
-                        countryCode = localCountryCode ?: "",
-                        leagueId = localLeagueId ?: 0,
-                    )
+                    val startDestination =
+                        selectStartScreen(
+                            countryCode = localCountryCode ?: "",
+                            leagueId = localLeagueId ?: 0,
+                        )
 
                     NavHost(
                         navController = navController,
@@ -73,19 +74,21 @@ class MainActivity : ComponentActivity() {
 
                         composable(
                             route = Routes.SelectLeagueScreen.route,
-                            arguments = listOf(
-                                navArgument(COUNTRY_CODE) {
-                                    type = NavType.StringType
-                                },
-                            ),
+                            arguments =
+                                listOf(
+                                    navArgument(COUNTRY_CODE) {
+                                        type = NavType.StringType
+                                    },
+                                ),
                         ) { input ->
 
                             // Set value for the country code depending the kind of navigation
-                            val countryCode = if (localCountryCode.isNullOrEmpty()) {
-                                input.arguments?.getString(COUNTRY_CODE)!!
-                            } else {
-                                localCountryCode
-                            }
+                            val countryCode =
+                                if (localCountryCode.isNullOrEmpty()) {
+                                    input.arguments?.getString(COUNTRY_CODE)!!
+                                } else {
+                                    localCountryCode
+                                }
 
                             LeaguesScreen(
                                 leaguesViewModel = leaguesViewModel,
