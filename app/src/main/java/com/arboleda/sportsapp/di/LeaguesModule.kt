@@ -5,27 +5,30 @@ import com.arboleda.sportsapp.data.endpoints.leagues.LeaguesApi
 import com.arboleda.sportsapp.data.repositories.leagues.LeaguesRepositoryImpl
 import com.arboleda.sportsapp.domain.repositories.leagues.LeaguesRepository
 import com.arboleda.sportsapp.domain.repositories.preferences.DatastorePreferencesRepository
+import com.arboleda.sportsapp.domain.usecases.leagues.GetAllLeaguesUC
+import com.arboleda.sportsapp.domain.usecases.leagues.GetLeagueIdUC
 import com.arboleda.sportsapp.domain.usecases.leagues.LeaguesUC
+import com.arboleda.sportsapp.domain.usecases.leagues.SetLeagueIdUC
 import com.arboleda.sportsapp.presentation.states.LeagueState
 import com.arboleda.sportsapp.presentation.viewmodels.leagues.LeaguesViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 object LeaguesModule {
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideLeaguesApi(retrofit: Retrofit): LeaguesApi {
         return retrofit.create(LeaguesApi::class.java)
     }
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideLeaguesRepository(
         datastorePreferencesRepository: DatastorePreferencesRepository,
         leaguesApi: LeaguesApi,
@@ -36,16 +39,38 @@ object LeaguesModule {
         )
 
     @Provides
-    @ViewModelScoped
-    fun provideLeaguesUC(leaguesRepository: LeaguesRepository): LeaguesUC = LeaguesUC(leaguesRepository = leaguesRepository)
+    @Singleton
+    fun provideGetAllLeagues(leaguesRepository: LeaguesRepository): GetAllLeaguesUC = GetAllLeaguesUC(leaguesRepository = leaguesRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
+    fun provideGetLeagueIdUC(leaguesRepository: LeaguesRepository): GetLeagueIdUC = GetLeagueIdUC(leaguesRepository = leaguesRepository)
+
+    @Provides
+    @Singleton
+    fun provideSetLeagueIdUC(leaguesRepository: LeaguesRepository): SetLeagueIdUC = SetLeagueIdUC(leaguesRepository = leaguesRepository)
+
+    @Provides
+    @Singleton
+    fun provideLeaguesUC(
+        getAllLeaguesUC: GetAllLeaguesUC,
+        getLeagueIdUC: GetLeagueIdUC,
+        setLeagueIdUC: SetLeagueIdUC,
+    ): LeaguesUC =
+        LeaguesUC(
+            getAllLeaguesUC = getAllLeaguesUC,
+            getLeagueIdUC = getLeagueIdUC,
+            setLeagueIdUC = setLeagueIdUC,
+        )
+
+    @Provides
+    @Singleton
     fun provideLeaguesViewModel(leaguesUC: LeaguesUC): LeaguesViewModel =
         LeaguesViewModel(
             leaguesUC = leaguesUC,
             _leagueState = MutableLiveData<LeagueState>(),
             _showDialog = MutableLiveData<Boolean>(),
             _leagueId = MutableLiveData<Int>(),
+            ioDispatcher = DispatchersModule.providerIoDispatcher(),
         )
 }
