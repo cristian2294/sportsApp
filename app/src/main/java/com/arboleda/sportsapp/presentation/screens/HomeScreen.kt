@@ -36,14 +36,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.arboleda.sportsapp.R
+import com.arboleda.sportsapp.presentation.viewmodels.fixtures.FixturesViewModel
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    fixturesViewModel: FixturesViewModel,
+    timeZone: String,
+    leagueId: Int,
+    season: Int,
+) {
+    fixturesViewModel.getAllFixtures(timeZone, leagueId, season)
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (menuOptions, title, mainMatch, otherMatches) = createRefs()
 
@@ -1037,8 +1043,10 @@ fun MenuOption(modifier: Modifier) {
     }
 }
 
+/*
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun HomeScreenPreview() {
     HomeScreen()
 }
+*/

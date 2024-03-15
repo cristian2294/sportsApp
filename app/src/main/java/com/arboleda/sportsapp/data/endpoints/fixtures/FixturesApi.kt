@@ -8,6 +8,7 @@ import retrofit2.http.Query
 interface FixturesApi {
     @GET("fixtures")
     suspend fun getAllFixtures(
+        @Query("timezone") timeZone: String,
         @Query("league") league: Int,
         @Query("season") season: Int,
     ): Response<Fixtures>

@@ -1,6 +1,7 @@
 package com.arboleda.sportsapp.data.models.fixtures
 
 import com.google.gson.annotations.SerializedName
+import com.arboleda.sportsapp.domain.models.fixtures.League as LeagueDomain
 
 data class League(
     @SerializedName("country")
@@ -17,4 +18,16 @@ data class League(
     val round: String,
     @SerializedName("season")
     val season: Int,
-)
+) {
+    fun toDomain(): LeagueDomain {
+        return LeagueDomain(
+            country = country,
+            flag = flag,
+            id = id,
+            logo = logo,
+            name = name,
+            round = round,
+            season = season,
+        )
+    }
+}
