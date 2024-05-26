@@ -12,4 +12,19 @@
 
     <!-- Leagues Screen-->
     <string name="leagues.title">Chose your league</string>
+
+
+    <!-- Home Screen-->
+    <string name="home.menu.fixtures">Fixtures</string>
+    <string name="home.menu.positions">Positions</string>
+    <string name="home.menu.teams">Teams</string>
+
+    <!-- Home - Fixtures Screen-->
+    <string name="home.fixtures.title">Fixtures</string>
+    <string name="home.fixtures.title_local_team">Local Team</string>
+    <string name="home.fixtures.title_visitor_team">Visitor Team</string>
+    <string name="home.fixtures.title_time_match">TIME</string>
+    <string name="home.fixtures.local_team_name_content_description">Local Team Name</string>
+    <string name="home.fixtures.visitor_team_name_content_description">Visitor Team Name</string>
+    <string name="home.fixtures.score_content_description">Score</string>
 </resources>

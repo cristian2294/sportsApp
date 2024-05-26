@@ -7,9 +7,10 @@ class SportInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
 
-        val request = originalRequest.newBuilder()
-            .header(NAME_HEADER_KEY, API_KEY)
-            .build()
+        val request =
+            originalRequest.newBuilder()
+                .header(NAME_HEADER_KEY, API_KEY)
+                .build()
 
         return chain.proceed(request)
     }

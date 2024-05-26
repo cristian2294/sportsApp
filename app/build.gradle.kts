@@ -1,18 +1,22 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("dagger.hilt.android.plugin")
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
 }
 
 android {
     namespace = "com.arboleda.sportsapp"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.arboleda.sportsapp"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -48,6 +52,16 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+
+ktlint {
+    android.value(true)
+    ignoreFailures.value(false)
+    reporters {
+        reporter(ReporterType.PLAIN)
+        reporter(ReporterType.CHECKSTYLE)
+        reporter(ReporterType.SARIF)
     }
 }
 
@@ -87,6 +101,11 @@ dependencies {
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$daggerHiltVersion")
 
+    // Hilt Navigation
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
+    kapt("com.google.dagger:hilt-compiler:$daggerHiltVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
@@ -108,6 +127,9 @@ dependencies {
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:$navigationVersion")
+
+    // Icons
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
@@ -51,14 +52,15 @@ import com.arboleda.sportsapp.util.Routes
 
 @Composable
 fun CountriesScreen(
-    countriesViewModel: CountriesViewModel,
+    countriesViewModel: CountriesViewModel = hiltViewModel(),
     navController: NavHostController,
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.purple2_50))
-            .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp)),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(colorResource(id = R.color.purple2_50))
+                .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp)),
     ) {
         InitCountriesScreen(countriesViewModel, navController, Modifier)
     }
@@ -146,17 +148,19 @@ fun ItemCountry(
             }
             Text(
                 text = country.name,
-                modifier = modifier.padding(start = dimensionResource(id = R.dimen.dimen_8dp))
-                    .align(alignment = Alignment.CenterVertically),
-
+                modifier =
+                    modifier
+                        .padding(start = dimensionResource(id = R.dimen.dimen_8dp))
+                        .align(alignment = Alignment.CenterVertically),
             )
         }
         Spacer(
             modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_8dp)),
         )
         Divider(
-            modifier = modifier
-                .height(dimensionResource(id = R.dimen.dimen_1dp)),
+            modifier =
+                modifier
+                    .height(dimensionResource(id = R.dimen.dimen_1dp)),
         )
     }
 }
@@ -164,27 +168,31 @@ fun ItemCountry(
 @Composable
 fun LoadImageIndeterminateFlag() {
     Image(
-        painter = painterResource(
-            id = R.drawable.ic_indeterminate_country,
-        ),
-        contentDescription = stringResource(
-            id = R.string.countries_indeterminate_flag_content_description,
-        ),
+        painter =
+            painterResource(
+                id = R.drawable.ic_indeterminate_country,
+            ),
+        contentDescription =
+            stringResource(
+                id = R.string.countries_indeterminate_flag_content_description,
+            ),
     )
 }
 
 @Composable
 fun LoadFlagCountry(flag: String) {
     AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(flag)
-            .decoderFactory(SvgDecoder.Factory())
-            .build(),
+        model =
+            ImageRequest.Builder(LocalContext.current)
+                .data(flag)
+                .decoderFactory(SvgDecoder.Factory())
+                .build(),
         contentDescription = stringResource(id = R.string.countries_flag_content_description),
         contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .size(dimensionResource(id = R.dimen.dimen_40dp))
-            .clip(CircleShape),
+        modifier =
+            Modifier
+                .size(dimensionResource(id = R.dimen.dimen_40dp))
+                .clip(CircleShape),
     )
 }
 
@@ -194,8 +202,10 @@ fun ShowLoader(modifier: Modifier) {
         modifier = modifier.fillMaxSize(),
     ) {
         CircularProgressIndicator(
-            modifier = Modifier.width(dimensionResource(id = R.dimen.dimen_64dp))
-                .align(alignment = Alignment.Center),
+            modifier =
+                Modifier
+                    .width(dimensionResource(id = R.dimen.dimen_64dp))
+                    .align(alignment = Alignment.Center),
             color = colorResource(id = R.color.purple2_500),
         )
     }
@@ -210,15 +220,17 @@ fun ShowError(
     if (show) {
         Dialog(onDismissRequest = { onDismiss() }) {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimensionResource(id = R.dimen.dimen_250dp)),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(dimensionResource(id = R.dimen.dimen_250dp)),
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.dimen_16dp)),
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(colorResource(id = R.color.purple2_100)),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .background(colorResource(id = R.color.purple2_100)),
                 ) {
                     Text(
                         text = stringResource(id = R.string.countries_error_title),
@@ -231,9 +243,10 @@ fun ShowError(
                     Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.dimen_28dp)))
                     Text(
                         text = message ?: stringResource(id = R.string.countries_error_title),
-                        modifier = Modifier
-                            .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp))
-                            .wrapContentSize(Alignment.Center),
+                        modifier =
+                            Modifier
+                                .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp))
+                                .wrapContentSize(Alignment.Center),
                         fontSize = dimensionResource(id = R.dimen.dimen_16dp).value.sp,
                     )
                     Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.dimen_16dp)))
@@ -241,12 +254,16 @@ fun ShowError(
                         onClick = {
                             onDismiss()
                         },
-                        modifier = Modifier.align(alignment = Alignment.End).padding(
-                            bottom = dimensionResource(
-                                id = R.dimen.dimen_24dp,
-                            ),
-                            end = dimensionResource(R.dimen.dimen_8dp),
-                        ),
+                        modifier =
+                            Modifier
+                                .align(alignment = Alignment.End)
+                                .padding(
+                                    bottom =
+                                        dimensionResource(
+                                            id = R.dimen.dimen_24dp,
+                                        ),
+                                    end = dimensionResource(R.dimen.dimen_8dp),
+                                ),
                     ) {
                         Text(
                             text = stringResource(id = R.string.countries_error_button_understood),
