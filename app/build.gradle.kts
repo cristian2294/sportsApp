@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("dagger.hilt.android.plugin")
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
 }
 
@@ -99,6 +100,11 @@ dependencies {
     // Dagger hilt
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$daggerHiltVersion")
+
+    // Hilt Navigation
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
+    kapt("com.google.dagger:hilt-compiler:$daggerHiltVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")

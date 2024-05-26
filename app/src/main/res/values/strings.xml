@@ -15,16 +15,16 @@
 
 
     <!-- Home Screen-->
-    <string name="home.menu.matches">Matches</string>
+    <string name="home.menu.fixtures">Fixtures</string>
     <string name="home.menu.positions">Positions</string>
     <string name="home.menu.teams">Teams</string>
 
-    <!-- Home - Matches Screen-->
-    <string name="home.matches.title">Matches</string>
-    <string name="home.matches.title_local_team">Local Team</string>
-    <string name="home.matches.title_visitor_team">Visitor Team</string>
-    <string name="home.matches.title_time_match">TIME</string>
-    <string name="home.matches.local_team_name_content_description">Local Team Name</string>
-    <string name="home.matches.visitor_team_name_content_description">Visitor Team Name</string>
-    <string name="home.matches.score_content_description">Score</string>
+    <!-- Home - Fixtures Screen-->
+    <string name="home.fixtures.title">Fixtures</string>
+    <string name="home.fixtures.title_local_team">Local Team</string>
+    <string name="home.fixtures.title_visitor_team">Visitor Team</string>
+    <string name="home.fixtures.title_time_match">TIME</string>
+    <string name="home.fixtures.local_team_name_content_description">Local Team Name</string>
+    <string name="home.fixtures.visitor_team_name_content_description">Visitor Team Name</string>
+    <string name="home.fixtures.score_content_description">Score</string>
 </resources>

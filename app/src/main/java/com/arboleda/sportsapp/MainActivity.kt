@@ -1,5 +1,6 @@
 package com.arboleda.sportsapp
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,10 +15,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.arboleda.sportsapp.presentation.screens.CountriesScreen
-import com.arboleda.sportsapp.presentation.screens.HomeScreen
+import com.arboleda.sportsapp.presentation.screens.FixturesScreen
 import com.arboleda.sportsapp.presentation.screens.LeaguesScreen
 import com.arboleda.sportsapp.presentation.viewmodels.countries.CountriesViewModel
-import com.arboleda.sportsapp.presentation.viewmodels.fixtures.FixturesViewModel
 import com.arboleda.sportsapp.presentation.viewmodels.leagues.LeaguesViewModel
 import com.arboleda.sportsapp.ui.theme.SportsAppTheme
 import com.arboleda.sportsapp.util.Constants
@@ -28,14 +28,15 @@ import com.arboleda.sportsapp.util.Constants.Companion.SEASON
 import com.arboleda.sportsapp.util.Constants.Companion.TIME_ZONE
 import com.arboleda.sportsapp.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
+import java.util.Calendar
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) { // sdsfsdfsadfs
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val countriesViewModel: CountriesViewModel by viewModels()
         val leaguesViewModel: LeaguesViewModel by viewModels()
-        val fixturesViewModel: FixturesViewModel by viewModels()
         countriesViewModel.getAllCountries()
         setContent {
             SportsAppTheme {
@@ -92,11 +93,12 @@ class MainActivity : ComponentActivity() {
                                 } else {
                                     localLeagueId
                                 }
-                            HomeScreen(
-                                fixturesViewModel = fixturesViewModel,
+
+                            val currentSeason = getCurrentSeason()
+                            FixturesScreen(
                                 timeZone = timeZone,
                                 leagueId = leagueId ?: 0,
-                                season = 2023,
+                                season = currentSeason,
                             )
                         }
 
@@ -132,6 +134,14 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun getCurrentSeason(): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDate.now().year
+        } else {
+            Calendar.getInstance().get(Calendar.YEAR)
         }
     }
 

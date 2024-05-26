@@ -1,6 +1,5 @@
 package com.arboleda.sportsapp.presentation.viewmodels.fixtures
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arboleda.sportsapp.di.IoDispatcher
@@ -22,9 +21,11 @@ class FixturesViewModel
     constructor(
         private val fixturesUC: FixturesUC,
         private val _fixtures: MutableStateFlow<FixturesState>,
+        private val _showDialog: MutableStateFlow<Boolean>,
         @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     ) : ViewModel() {
-        val fixturesState: StateFlow<FixturesState> = _fixtures
+        val fixturesState: StateFlow<FixturesState> get() = _fixtures
+        val showDialog: StateFlow<Boolean> get() = _showDialog
 
         fun getAllFixtures(
             timeZone: String,
@@ -37,13 +38,15 @@ class FixturesViewModel
                         .onStart { _fixtures.value = FixturesState.Loading }
                         .catch {
                             _fixtures.value = FixturesState.Error(it.message.orEmpty())
-                            Log.d("***Error", it.message.toString())
                         }
                         .collect { fixtures ->
                             _fixtures.value = FixturesState.Success(fixtures.response)
-                            Log.d("***Error", fixtures.response.toString())
                         }
                 }
             }
+        }
+
+        fun onDialogDismiss() {
+            _showDialog.value = false
         }
     }

@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
@@ -51,7 +52,7 @@ import com.arboleda.sportsapp.util.Routes
 
 @Composable
 fun CountriesScreen(
-    countriesViewModel: CountriesViewModel,
+    countriesViewModel: CountriesViewModel = hiltViewModel(),
     navController: NavHostController,
 ) {
     Box(
@@ -148,7 +149,8 @@ fun ItemCountry(
             Text(
                 text = country.name,
                 modifier =
-                    modifier.padding(start = dimensionResource(id = R.dimen.dimen_8dp))
+                    modifier
+                        .padding(start = dimensionResource(id = R.dimen.dimen_8dp))
                         .align(alignment = Alignment.CenterVertically),
             )
         }
@@ -201,7 +203,8 @@ fun ShowLoader(modifier: Modifier) {
     ) {
         CircularProgressIndicator(
             modifier =
-                Modifier.width(dimensionResource(id = R.dimen.dimen_64dp))
+                Modifier
+                    .width(dimensionResource(id = R.dimen.dimen_64dp))
                     .align(alignment = Alignment.Center),
             color = colorResource(id = R.color.purple2_500),
         )
@@ -252,13 +255,15 @@ fun ShowError(
                             onDismiss()
                         },
                         modifier =
-                            Modifier.align(alignment = Alignment.End).padding(
-                                bottom =
-                                    dimensionResource(
-                                        id = R.dimen.dimen_24dp,
-                                    ),
-                                end = dimensionResource(R.dimen.dimen_8dp),
-                            ),
+                            Modifier
+                                .align(alignment = Alignment.End)
+                                .padding(
+                                    bottom =
+                                        dimensionResource(
+                                            id = R.dimen.dimen_24dp,
+                                        ),
+                                    end = dimensionResource(R.dimen.dimen_8dp),
+                                ),
                     ) {
                         Text(
                             text = stringResource(id = R.string.countries_error_button_understood),

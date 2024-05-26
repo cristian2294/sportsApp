@@ -48,6 +48,7 @@ object FixturesModule {
         return FixturesViewModel(
             fixturesUC = fixturesUC,
             _fixtures = MutableStateFlow(FixturesState.Loading),
+            _showDialog = MutableStateFlow(false),
             ioDispatcher = DispatchersModule.providerIoDispatcher(),
         )
     }
