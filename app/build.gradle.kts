@@ -73,6 +73,7 @@ dependencies {
     val coilVersion = "2.2.2"
     val roomVersion = "2.4.2"
     val navigationVersion = "2.5.3"
+    val okHttp3Version = "4.9.0"
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.activity:activity-compose:1.7.0")
@@ -130,6 +131,9 @@ dependencies {
 
     // Icons
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
+
+    // OkHttp3
+    implementation("com.squareup.okhttp3:logging-interceptor:$okHttp3Version")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
