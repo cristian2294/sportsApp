@@ -137,22 +137,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun getCurrentSeason(): Int {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    private fun getCurrentSeason(): Int =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             LocalDate.now().year
         } else {
             Calendar.getInstance().get(Calendar.YEAR)
         }
-    }
 
     private fun selectStartScreen(
         countryCode: String,
         leagueId: Int,
-    ): String {
-        return when {
+    ): String =
+        when {
             countryCode.isEmpty() -> Constants.SELECT_COUNTRY_SCREEN
             leagueId == 0 -> Constants.SELECT_LEAGUE_SCREEN
             else -> Constants.HOME_SCREEN
         }
-    }
 }

@@ -22,6 +22,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -56,7 +57,9 @@ fun FixturesScreen(
     leagueId: Int,
     season: Int,
 ) {
-    fixturesViewModel.getAllFixtures(timeZone, leagueId, season)
+    LaunchedEffect(true) {
+        fixturesViewModel.getAllFixtures(timeZone, leagueId, season)
+    }
     val fixturesState by fixturesViewModel.fixturesState.collectAsState()
     val showDialog: Boolean by fixturesViewModel.showDialog.collectAsState(initial = true)
 
@@ -105,8 +108,7 @@ fun ShowFixtures(fixtures: List<Response>) {
                     top = dimensionResource(id = R.dimen.dimen_24dp),
                     start = dimensionResource(id = R.dimen.dimen_16dp),
                     end = dimensionResource(id = R.dimen.dimen_16dp),
-                )
-                .constrainAs(mainMatch) {
+                ).constrainAs(mainMatch) {
                     top.linkTo(title.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -200,9 +202,13 @@ fun ScoreMainMatchComponent(fixtures: List<Response>) {
     ) {
         AsyncImage(
             model =
-                ImageRequest.Builder(LocalContext.current)
-                    .data(fixtures.first().teams.home.logo)
-                    .crossfade(true)
+                ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(
+                        fixtures
+                            .first()
+                            .teams.home.logo,
+                    ).crossfade(true)
                     .build(),
             placeholder = painterResource(id = R.drawable.ic_indeterminate_country),
             contentDescription =
@@ -223,7 +229,13 @@ fun ScoreMainMatchComponent(fixtures: List<Response>) {
                     .padding(top = dimensionResource(id = R.dimen.dimen_12dp)),
         ) {
             Text(
-                text = removeDecimalZero(fixtures.first().score.fulltime.home.toString()),
+                text =
+                    removeDecimalZero(
+                        fixtures
+                            .first()
+                            .score.fulltime.home
+                            .toString(),
+                    ),
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
@@ -235,7 +247,13 @@ fun ScoreMainMatchComponent(fixtures: List<Response>) {
                 fontSize = 20.sp,
             )
             Text(
-                text = removeDecimalZero(fixtures.first().score.fulltime.away.toString()),
+                text =
+                    removeDecimalZero(
+                        fixtures
+                            .first()
+                            .score.fulltime.away
+                            .toString(),
+                    ),
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
@@ -244,9 +262,13 @@ fun ScoreMainMatchComponent(fixtures: List<Response>) {
 
         AsyncImage(
             model =
-                ImageRequest.Builder(LocalContext.current)
-                    .data(fixtures.first().teams.away.logo)
-                    .crossfade(true)
+                ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(
+                        fixtures
+                            .first()
+                            .teams.away.logo,
+                    ).crossfade(true)
                     .build(),
             placeholder = painterResource(id = R.drawable.ic_indeterminate_country),
             contentDescription =
@@ -268,7 +290,10 @@ fun TeamNamesMainMatchComponent(fixtures: List<Response>) {
         Modifier.fillMaxWidth(),
     ) {
         Text(
-            text = fixtures.first().teams.home.name,
+            text =
+                fixtures
+                    .first()
+                    .teams.home.name,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center,
         )
@@ -276,7 +301,10 @@ fun TeamNamesMainMatchComponent(fixtures: List<Response>) {
         Spacer(modifier = Modifier.weight(1f))
 
         Text(
-            text = fixtures.first().teams.away.name,
+            text =
+                fixtures
+                    .first()
+                    .teams.away.name,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center,
         )
@@ -298,8 +326,7 @@ fun OtherMatchesComponent(
                             topStart = dimensionResource(id = R.dimen.dimen_40dp),
                             topEnd = dimensionResource(id = R.dimen.dimen_40dp),
                         ),
-                )
-                .background(color = colorResource(id = R.color.purple2_400)),
+                ).background(color = colorResource(id = R.color.purple2_400)),
     ) {
         TitleOtherMatchesComponent(modifier)
         Spacer(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_12dp)))
@@ -355,7 +382,8 @@ fun ScoreOtherMatchesComponent(
 
                 AsyncImage(
                     model =
-                        ImageRequest.Builder(LocalContext.current)
+                        ImageRequest
+                            .Builder(LocalContext.current)
                             .data(fixture.teams.home.logo)
                             .crossfade(true)
                             .build(),
@@ -372,7 +400,11 @@ fun ScoreOtherMatchesComponent(
                 )
 
                 Text(
-                    text = removeDecimalZero(fixture.score.fulltime.home.toString()),
+                    text =
+                        removeDecimalZero(
+                            fixture.score.fulltime.home
+                                .toString(),
+                        ),
                     textAlign = TextAlign.Center,
                     fontSize = 18.sp,
                     color = colorResource(id = R.color.white),
@@ -386,7 +418,11 @@ fun ScoreOtherMatchesComponent(
                     modifier = Modifier.weight(0.5f),
                 )
                 Text(
-                    text = removeDecimalZero(fixture.score.fulltime.away.toString()),
+                    text =
+                        removeDecimalZero(
+                            fixture.score.fulltime.away
+                                .toString(),
+                        ),
                     textAlign = TextAlign.Center,
                     fontSize = 18.sp,
                     color = colorResource(id = R.color.white),
@@ -395,7 +431,8 @@ fun ScoreOtherMatchesComponent(
 
                 AsyncImage(
                     model =
-                        ImageRequest.Builder(LocalContext.current)
+                        ImageRequest
+                            .Builder(LocalContext.current)
                             .data(fixture.teams.away.logo)
                             .crossfade(true)
                             .build(),
@@ -483,6 +520,4 @@ fun MenuOption(modifier: Modifier) {
     }
 }
 
-private fun removeDecimalZero(value: Any): String {
-    return value.toString().removeSuffix(".0")
-}
+private fun removeDecimalZero(value: Any): String = value.toString().removeSuffix(".0")
