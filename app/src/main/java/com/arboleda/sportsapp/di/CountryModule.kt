@@ -1,6 +1,5 @@
 package com.arboleda.sportsapp.di
 
-import androidx.lifecycle.MutableLiveData
 import com.arboleda.sportsapp.data.endpoints.countries.CountriesApi
 import com.arboleda.sportsapp.data.repositories.countries.CountriesRepositoryImpl
 import com.arboleda.sportsapp.domain.repositories.countries.CountriesRepository
@@ -15,6 +14,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.MutableStateFlow
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -23,39 +23,33 @@ import javax.inject.Singleton
 object CountryModule {
     @Singleton
     @Provides
-    fun provideCountriesApi(retrofit: Retrofit): CountriesApi {
-        return retrofit.create(CountriesApi::class.java)
-    }
+    fun provideCountriesApi(retrofit: Retrofit): CountriesApi = retrofit.create(CountriesApi::class.java)
 
     @Singleton
     @Provides
     fun provideCountriesRepository(
         datastorePreferencesRepository: DatastorePreferencesRepository,
         countriesApi: CountriesApi,
-    ): CountriesRepository {
-        return CountriesRepositoryImpl(
+    ): CountriesRepository =
+        CountriesRepositoryImpl(
             datastorePreferencesRepository = datastorePreferencesRepository,
             countriesApi = countriesApi,
         )
-    }
 
     @Singleton
     @Provides
-    fun provideGetAllCountriesUC(countriesRepository: CountriesRepository): GetAllCountriesUC {
-        return GetAllCountriesUC(countriesRepository = countriesRepository)
-    }
+    fun provideGetAllCountriesUC(countriesRepository: CountriesRepository): GetAllCountriesUC =
+        GetAllCountriesUC(countriesRepository = countriesRepository)
 
     @Singleton
     @Provides
-    fun provideGetCountryCodeUC(countriesRepository: CountriesRepository): GetCountryCodeUC {
-        return GetCountryCodeUC(countriesRepository = countriesRepository)
-    }
+    fun provideGetCountryCodeUC(countriesRepository: CountriesRepository): GetCountryCodeUC =
+        GetCountryCodeUC(countriesRepository = countriesRepository)
 
     @Singleton
     @Provides
-    fun provideSetCountryCodeUC(countriesRepository: CountriesRepository): SetCountryCodeUC {
-        return SetCountryCodeUC(countriesRepository = countriesRepository)
-    }
+    fun provideSetCountryCodeUC(countriesRepository: CountriesRepository): SetCountryCodeUC =
+        SetCountryCodeUC(countriesRepository = countriesRepository)
 
     @Singleton
     @Provides
@@ -63,23 +57,21 @@ object CountryModule {
         getAllCountriesUC: GetAllCountriesUC,
         getCountriesUC: GetCountryCodeUC,
         setCountryCodeUC: SetCountryCodeUC,
-    ): CountriesUC {
-        return CountriesUC(
+    ): CountriesUC =
+        CountriesUC(
             getAllCountriesUC = getAllCountriesUC,
             getCountryCodeUC = getCountriesUC,
             setCountryCode = setCountryCodeUC,
         )
-    }
 
     @Singleton
     @Provides
-    fun provideCountriesViewModel(countriesUC: CountriesUC): CountriesViewModel {
-        return CountriesViewModel(
+    fun provideCountriesViewModel(countriesUC: CountriesUC): CountriesViewModel =
+        CountriesViewModel(
             countriesUC = countriesUC,
-            _countriesState = MutableLiveData<CountriesState>(),
-            _showDialog = MutableLiveData<Boolean>(),
-            _countryCode = MutableLiveData<String>(),
+            _countriesState = MutableStateFlow(CountriesState.Loading),
+            _showDialog = MutableStateFlow(false),
+            _countryCode = MutableStateFlow(String()),
             ioDispatcher = DispatchersModule.providerIoDispatcher(),
         )
-    }
 }

@@ -1,7 +1,5 @@
 package com.arboleda.sportsapp.presentation.viewmodels.leagues
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arboleda.sportsapp.di.IoDispatcher
@@ -10,6 +8,8 @@ import com.arboleda.sportsapp.presentation.states.LeagueState
 import com.arboleda.sportsapp.util.Constants.Companion.LEAGUE_ID_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -19,15 +19,15 @@ class LeaguesViewModel
     @Inject
     constructor(
         private val leaguesUC: LeaguesUC,
-        private val _leagueState: MutableLiveData<LeagueState>,
-        private val _showDialog: MutableLiveData<Boolean>,
-        private val _leagueId: MutableLiveData<Int>,
+        private val _leagueState: MutableStateFlow<LeagueState>,
+        private val _showDialog: MutableStateFlow<Boolean>,
+        private val _leagueId: MutableStateFlow<Int>,
         @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     ) : ViewModel() {
-        val showDialog: LiveData<Boolean> get() = _showDialog
-        val leagueState: LiveData<LeagueState> get() = _leagueState
+        val showDialog: StateFlow<Boolean> get() = _showDialog
+        val leagueState: StateFlow<LeagueState> get() = _leagueState
 
-        val leagueId: LiveData<Int> get() = _leagueId
+        val leagueId: StateFlow<Int> get() = _leagueId
 
         fun getAllLeagues(countryCode: String) {
             _leagueState.value = LeagueState.Loading

@@ -1,6 +1,5 @@
 package com.arboleda.sportsapp.presentation.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -17,8 +16,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +29,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
@@ -37,13 +38,19 @@ import com.arboleda.sportsapp.domain.models.leagues.League
 import com.arboleda.sportsapp.domain.models.leagues.Response
 import com.arboleda.sportsapp.presentation.states.LeagueState
 import com.arboleda.sportsapp.presentation.viewmodels.leagues.LeaguesViewModel
+import com.arboleda.sportsapp.util.Constants.Companion.DEFAULT_TIME_ZONE
+import com.arboleda.sportsapp.util.Util.getCurrentSeason
 
 @Composable
 fun LeaguesScreen(
-    leaguesViewModel: LeaguesViewModel,
+    leaguesViewModel: LeaguesViewModel = hiltViewModel(),
     countryCode: String,
+    navigateToHome: (timeZone: String, leagueId: Int, season: Int) -> Unit,
 ) {
-    leaguesViewModel.getAllLeagues(countryCode)
+    LaunchedEffect(true) {
+        leaguesViewModel.getAllLeagues(countryCode)
+    }
+
     Box(
         modifier =
             Modifier
@@ -51,17 +58,22 @@ fun LeaguesScreen(
                 .background(colorResource(id = R.color.purple2_50))
                 .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp)),
     ) {
-        InitLeaguesScreen(leaguesViewModel, Modifier)
+        InitLeaguesScreen(
+            modifier = Modifier,
+            leaguesViewModel = leaguesViewModel,
+            navigateToHome = navigateToHome,
+        )
     }
 }
 
 @Composable
 fun InitLeaguesScreen(
-    leaguesViewModel: LeaguesViewModel,
     modifier: Modifier,
+    leaguesViewModel: LeaguesViewModel,
+    navigateToHome: (timeZone: String, leagueId: Int, season: Int) -> Unit,
 ) {
-    val leaguesState = leaguesViewModel.leagueState.observeAsState()
-    val showDialog: Boolean by leaguesViewModel.showDialog.observeAsState(initial = true)
+    val leaguesState = leaguesViewModel.leagueState.collectAsState()
+    val showDialog: Boolean by leaguesViewModel.showDialog.collectAsState()
 
     when (leaguesState.value) {
         is LeagueState.Error ->
@@ -75,11 +87,10 @@ fun InitLeaguesScreen(
         LeagueState.Loading -> ShowLoader(modifier = modifier)
         is LeagueState.Success ->
             ShowListLeagues(
-                leaguesViewModel,
-                (leaguesState.value as LeagueState.Success).leagues,
+                leaguesViewModel = leaguesViewModel,
+                leagues = (leaguesState.value as LeagueState.Success).leagues,
+                navigateToHome = navigateToHome,
             )
-
-        else -> Unit
     }
 }
 
@@ -87,10 +98,16 @@ fun InitLeaguesScreen(
 fun ShowListLeagues(
     leaguesViewModel: LeaguesViewModel,
     leagues: List<Response>,
+    navigateToHome: (timeZone: String, leagueId: Int, season: Int) -> Unit,
 ) {
     TitleLeagueScreen(Modifier)
     Spacer(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_16dp)))
-    ListLeagues(leaguesViewModel, Modifier, leagues)
+    ListLeagues(
+        leaguesViewModel = leaguesViewModel,
+        modifier = Modifier,
+        leagues = leagues,
+        navigateToHome = navigateToHome,
+    )
 }
 
 @Composable
@@ -109,15 +126,19 @@ fun ListLeagues(
     leaguesViewModel: LeaguesViewModel,
     modifier: Modifier,
     leagues: List<Response>,
+    navigateToHome: (timeZone: String, leagueId: Int, season: Int) -> Unit,
 ) {
-    val context = LocalContext.current
     LazyColumn(
         modifier = modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_80dp)),
     ) {
         items(leagues) { response ->
             ItemLeague(response.league, modifier) {
                 leaguesViewModel.saveLeagueId(response.league.id)
-                Toast.makeText(context, response.league.name, Toast.LENGTH_SHORT).show()
+                navigateToHome(
+                    DEFAULT_TIME_ZONE,
+                    response.league.id,
+                    getCurrentSeason(),
+                )
             }
         }
     }
@@ -142,7 +163,8 @@ fun ItemLeague(
             Text(
                 text = league.name,
                 modifier =
-                    modifier.padding(start = dimensionResource(id = R.dimen.dimen_8dp))
+                    modifier
+                        .padding(start = dimensionResource(id = R.dimen.dimen_8dp))
                         .align(alignment = Alignment.CenterVertically),
             )
         }
@@ -161,7 +183,8 @@ fun ItemLeague(
 fun LoadLeagueLogo(logo: String) {
     AsyncImage(
         model =
-            ImageRequest.Builder(LocalContext.current)
+            ImageRequest
+                .Builder(LocalContext.current)
                 .data(logo)
                 .decoderFactory(SvgDecoder.Factory())
                 .build(),

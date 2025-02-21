@@ -1,6 +1,5 @@
 package com.arboleda.sportsapp.presentation.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,8 +24,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +39,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
@@ -48,12 +46,11 @@ import com.arboleda.sportsapp.R
 import com.arboleda.sportsapp.domain.models.countries.Response
 import com.arboleda.sportsapp.presentation.states.CountriesState
 import com.arboleda.sportsapp.presentation.viewmodels.countries.CountriesViewModel
-import com.arboleda.sportsapp.util.Routes
 
 @Composable
 fun CountriesScreen(
     countriesViewModel: CountriesViewModel = hiltViewModel(),
-    navController: NavHostController,
+    navigateToLeagues: (countryCode: String) -> Unit,
 ) {
     Box(
         modifier =
@@ -62,18 +59,18 @@ fun CountriesScreen(
                 .background(colorResource(id = R.color.purple2_50))
                 .padding(horizontal = dimensionResource(id = R.dimen.dimen_16dp)),
     ) {
-        InitCountriesScreen(countriesViewModel, navController, Modifier)
+        InitCountriesScreen(Modifier, countriesViewModel, navigateToLeagues)
     }
 }
 
 @Composable
 fun InitCountriesScreen(
-    countriesViewModel: CountriesViewModel,
-    navController: NavHostController,
     modifier: Modifier,
+    countriesViewModel: CountriesViewModel,
+    navigateToLeagues: (countryCode: String) -> Unit,
 ) {
-    val countriesState = countriesViewModel.countriesState.observeAsState()
-    val showDialog: Boolean by countriesViewModel.showDialog.observeAsState(initial = true)
+    val countriesState = countriesViewModel.countriesState.collectAsState()
+    val showDialog: Boolean by countriesViewModel.showDialog.collectAsState()
     when (countriesState.value) {
         is CountriesState.Error -> {
             ShowError(
@@ -85,15 +82,14 @@ fun InitCountriesScreen(
         }
 
         CountriesState.Loading -> ShowLoader(modifier)
+
         is CountriesState.Success -> {
             ShowListCountries(
-                countriesViewModel,
-                (countriesState.value as CountriesState.Success).countries,
-                navController,
+                countriesViewModel = countriesViewModel,
+                countries = (countriesState.value as CountriesState.Success).countries,
+                navigateToLeagues = navigateToLeagues,
             )
         }
-
-        else -> Unit
     }
 }
 
@@ -113,9 +109,8 @@ fun ListCountries(
     countriesViewModel: CountriesViewModel,
     modifier: Modifier,
     countries: List<Response>,
-    navController: NavHostController,
+    navigateToLeagues: (countryCode: String) -> Unit,
 ) {
-    val context = LocalContext.current
     LazyColumn(
         modifier = modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_80dp)),
     ) {
@@ -123,8 +118,7 @@ fun ListCountries(
             val countryCode = country.code ?: String()
             ItemCountry(country, modifier) {
                 countriesViewModel.saveCountryCode(countryCode)
-                Toast.makeText(context, country.name, Toast.LENGTH_SHORT).show()
-                navController.navigate(Routes.SelectLeagueScreen.createRoute(countryCode))
+                navigateToLeagues(countryCode)
             }
         }
     }
@@ -134,9 +128,14 @@ fun ListCountries(
 fun ItemCountry(
     country: Response,
     modifier: Modifier,
-    onItemSelected: (country: Response) -> Unit,
+    onItemSelected: () -> Unit,
 ) {
-    Column(modifier = modifier.clickable { onItemSelected(country) }) {
+    Column(
+        modifier =
+            modifier.clickable {
+                onItemSelected()
+            },
+    ) {
         Spacer(
             modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_8dp)),
         )
@@ -183,7 +182,8 @@ fun LoadImageIndeterminateFlag() {
 fun LoadFlagCountry(flag: String) {
     AsyncImage(
         model =
-            ImageRequest.Builder(LocalContext.current)
+            ImageRequest
+                .Builder(LocalContext.current)
                 .data(flag)
                 .decoderFactory(SvgDecoder.Factory())
                 .build(),
@@ -280,9 +280,9 @@ fun ShowError(
 fun ShowListCountries(
     countriesViewModel: CountriesViewModel,
     countries: List<Response>,
-    navController: NavHostController,
+    navigateToLeagues: (countryCode: String) -> Unit,
 ) {
     Title(Modifier)
     Spacer(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.dimen_16dp)))
-    ListCountries(countriesViewModel, Modifier, countries, navController)
+    ListCountries(countriesViewModel, Modifier, countries, navigateToLeagues = navigateToLeagues)
 }

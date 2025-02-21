@@ -1,7 +1,5 @@
 package com.arboleda.sportsapp.presentation.viewmodels.countries
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arboleda.sportsapp.di.IoDispatcher
@@ -10,6 +8,8 @@ import com.arboleda.sportsapp.presentation.states.CountriesState
 import com.arboleda.sportsapp.util.Constants.Companion.COUNTRY_CODE_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -19,20 +19,16 @@ class CountriesViewModel
     @Inject
     constructor(
         private val countriesUC: CountriesUC,
-        private val _countriesState: MutableLiveData<CountriesState>,
-        private val _showDialog: MutableLiveData<Boolean>,
-        private val _countryCode: MutableLiveData<String>,
+        private val _countriesState: MutableStateFlow<CountriesState>,
+        private val _showDialog: MutableStateFlow<Boolean>,
+        private val _countryCode: MutableStateFlow<String>,
         @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     ) : ViewModel() {
-        val countriesState: LiveData<CountriesState> get() = _countriesState
+        val countriesState: StateFlow<CountriesState> get() = _countriesState
 
-        val showDialog: LiveData<Boolean> get() = _showDialog
+        val showDialog: StateFlow<Boolean> get() = _showDialog
 
-        val countryCode: LiveData<String> get() = _countryCode
-
-        init {
-            getCountryCode()
-        }
+        val countryCode: StateFlow<String> get() = _countryCode
 
         fun getAllCountries() {
             _countriesState.value = CountriesState.Loading

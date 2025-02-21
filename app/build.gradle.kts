@@ -7,6 +7,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("dagger.hilt.android.plugin")
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -46,11 +47,13 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.0"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
         }
     }
 }
@@ -69,11 +72,12 @@ dependencies {
 
     val retrofitVersion = "2.9.0"
     val mockkVersion = "1.13.5"
-    val daggerHiltVersion = "2.44"
+    val daggerHiltVersion = "2.48"
     val coilVersion = "2.2.2"
     val roomVersion = "2.4.2"
-    val navigationVersion = "2.5.3"
+    val navigationVersion = "2.8.7"
     val okHttp3Version = "4.9.0"
+    val kotlinSerializationVersion = "1.6.3"
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.activity:activity-compose:1.7.0")
@@ -134,6 +138,9 @@ dependencies {
 
     // OkHttp3
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttp3Version")
+
+    // Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
